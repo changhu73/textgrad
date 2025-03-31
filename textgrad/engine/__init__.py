@@ -1,5 +1,6 @@
 from .base import EngineLM, CachedEngine
 from textgrad.engine_experimental.litellm import LiteLLMEngine
+import os
 
 __ENGINE_NAME_SHORTCUTS__ = {
     "opus": "claude-3-opus-20240229",
@@ -8,6 +9,9 @@ __ENGINE_NAME_SHORTCUTS__ = {
     "sonnet-3.5": "claude-3-5-sonnet-20240620",
     "together-llama-3-70b": "together-meta-llama/Llama-3-70b-chat-hf",
     "vllm-llama-3-8b": "vllm-meta-llama/Meta-Llama-3-8B-Instruct",
+
+    "deepseek": "deepseek/deepseek-chat-v3-0324:free",
+    "deepseek-free": "deepseek/deepseek-chat-v3-0324:free",
 }
 
 # Any better way to do this?
@@ -79,5 +83,16 @@ def get_engine(engine_name: str, **kwargs) -> EngineLM:
         from .groq import ChatGroq
         engine_name = engine_name.replace("groq-", "")
         return ChatGroq(model_string=engine_name, **kwargs)
+    
+
+    elif "deepseek" in engine_name:
+        from .deepseek import DeepSeekOpenRouterEngine
+        if "api_key" not in kwargs:
+            raise ValueError(
+                "DeepSeek engine requires OpenRouter API key. "
+                "Please provide api_key parameter or set OPENROUTER_API_KEY environment variable."
+            )
+        return DeepSeekOpenRouterEngine(model_string=engine_name, **kwargs)
+            
     else:
         raise ValueError(f"Engine {engine_name} not supported")
