@@ -39,7 +39,7 @@ class DeepSeekOpenRouterEngine(EngineLM, CachedEngine):
         self.system_prompt = system_prompt
         
         # Validate required parameters
-        self.api_key = api_key or os.getenv("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")
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         if not self.api_key:
             raise ValueError(
                 "OpenRouter API key is required. "

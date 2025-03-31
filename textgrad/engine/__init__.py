@@ -87,7 +87,7 @@ def get_engine(engine_name: str, **kwargs) -> EngineLM:
 
     elif "deepseek" in engine_name:
         from .deepseek import DeepSeekOpenRouterEngine
-        if "api_key" not in kwargs:
+        if "api_key" not in kwargs and os.getenv("OPENROUTER_API_KEY") is None:
             raise ValueError(
                 "DeepSeek engine requires OpenRouter API key. "
                 "Please provide api_key parameter or set OPENROUTER_API_KEY environment variable."
